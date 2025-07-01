@@ -1,0 +1,13 @@
+{
+  "fileTypes": {
+    "videos": "videos"
+  },
+  "folderName": {
+    "video": "videos/"
+  },
+  "uploadProgress": {
+    "type": {
+      "upload": "upload"
+    }
+  }
+}

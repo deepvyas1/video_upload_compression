@@ -1,0 +1,48 @@
+{
+  "videoMimeType": {
+    "values": [
+      "video/mp4",
+      "video/webm",
+      "video/ogg",
+      "video/x-msvideo",
+      "video/mpeg",
+      "video/mp2t",
+      "video/quicktime"
+    ]
+  },
+  "extensions": {
+    "values": [
+      ".mp4",
+      ".mov"
+    ]
+  },
+  "formats": {
+    "default": "mp4"
+  },
+  "bitrates": {
+    "default": "3000k"
+  },
+  "codecs": {
+    "default": "libx264",
+    "av1": "libsvtav1"
+  },
+  "status": {
+    "values": [
+      "active",
+      "deleted",
+      "dead"
+    ],
+    "active": "active",
+    "deleted": "deleted",
+    "dead": "dead"
+  },
+  "role": {
+    "moderator": "moderator",
+    "user": "user"
+  },
+  "video": "video",
+  "encodings": {
+    "7bit": "7bit",
+    "base64": "base64"
+  }
+}

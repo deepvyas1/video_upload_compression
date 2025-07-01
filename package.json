@@ -1,0 +1,26 @@
+{
+  "name": "video_upload_compression",
+  "version": "1.0.0",
+  "description": "A lightweight and efficient RESTful API for uploading and compressing video files. Built for applications that require smooth media handling, optimized file sizes, and scalable integration.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2",
+    "body-parser": "^2.2.0",
+    "compression": "^1.8.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "fluent-ffmpeg": "^2.1.3",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.16.0",
+    "multer": "^2.0.1",
+    "workerpool": "^9.3.2"
+  }
+}
