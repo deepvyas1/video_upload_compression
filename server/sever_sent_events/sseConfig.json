@@ -1,0 +1,27 @@
+{
+  "media": {
+    "types": {
+      "video": "video",
+      "values": [
+        "video"
+      ]
+    }
+  },
+  "redis": {
+    "keys": {
+      "mediaUpload": "sse:mediaType:userId:requestId"
+    }
+  },
+  "progress": {
+    "type": {
+      "compression": "compression",
+      "upload": "upload"
+    }
+  },
+  "events": {
+    "connection_initiated": "connection_initiated",
+    "media_upload_progress": "media_upload_progress",
+    "media_compression_progress": "media_compression_progress",
+    "media_uploaded": "media_uploaded"
+  }
+}

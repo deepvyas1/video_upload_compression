@@ -1,0 +1,28 @@
+{
+  "dbCredentials": {
+    "mongo": {
+      "host": [
+        "schooldb-dev.wufiz.mongodb.net"
+      ],
+      "mongo_db": "schooldb",
+      "username": "kynz-fns-dev-user",
+      "password": "raLhMJO926XFfCZE"
+    }
+  },
+  "shortIdCharacters": "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "awsS3": {
+    "accessKey": "",
+    "secretAccessKey": "",
+    "bucket": {
+      "video": ""
+    },
+    "cloudFront": {
+      "video": ""
+    }
+  },
+  "nanoIdCharacters": "0123456789abcdefghijklmnopqrstuvwxvyz",
+  "nanoIdLength": 8,
+  "mainThreadMemoryPercent": 20,
+  "maxWorkerThreadCount": 3,
+  "fileFieldName": "files"
+}
