@@ -101,6 +101,7 @@ module.exports = {
                     requestId: requestId
                 }
             };
+
             try {
                 const saveVideoRes = await Video.create(insertObject);
                 if (saveVideoRes) {
@@ -110,20 +111,20 @@ module.exports = {
                     workerBody.workerData.mediaId = saveVideoRes._id.toString();
 
                     // Here, we are passing the video to the worker pool for the compression
-                    videoImageWorkerPool.exec("compressVideo", [workerBody.workerData], {
+                    videoCompressionWorkerPool.exec("compressVideo", [workerBody.workerData], {
                         on: payload => {
                             if (sanityChecks.isObjectValid(payload) && payload.progress) {
                                 isRequestValid.res.write("data: " + `${JSON.stringify({
                                     event: sseConfig.events.media_compression_progress,
-                                    progress: payload.progress.percent,
+                                    progress: payload.progress,
                                     progressType: sseConfig.progress.type.compression,
                                     mediaId: saveVideoRes._id.toString()
                                 })}` + '\n\n');
-
+                    
                                 // Note ::: We need to flush the response otherwise frontend will not receive data through res object.
                                 isRequestValid.res.flush();
                             }
-                            console.log("Info ::: Video and Image worker pool stats: ", videoImageWorkerPool.stats()); // For testing purpose
+                            console.log("Info ::: Video and Image worker pool stats: ", videoCompressionWorkerPool.stats()); // For testing purpose
                         }
                     }).then((compressedFileRes) => {
                         if (compressedFileRes && compressedFileRes.code === 200 && compressedFileRes.status === "success") {
@@ -158,7 +159,7 @@ module.exports = {
                                         flowType: sseConfig.media.types.video,
                                         mediaId: saveVideoRes._id
                                     };
-
+                    
                                     // This is to upload video file to S3 with server sent events.
                                     awsService.callSingleFileUploadFromSSE(videoUploadS3Object, async (err, awsDataRes) => {
                                         if (err) {
@@ -178,9 +179,9 @@ module.exports = {
                                                 s3Url: awsDataRes.Location,
                                                 etag: awsDataRes.ETag.slice(1, -1),
                                                 bucketName: awsDataRes.Bucket,
-                                                cfUrl: cfImageUrl + awsDataRes.Key
+                                                cfUrl: cfVideoUrl + awsDataRes.Key
                                             };
-
+                    
                                             // This is to calculate the details of the video file
                                             ffmpeg.ffprobe(awsS3Object.cfUrl, async (err, fileMetaData) => {
                                                 if (err) {
@@ -193,7 +194,7 @@ module.exports = {
                                                     deleteFileFromDisk(originalFilePath, originalFileName);
                                                 } else {
                                                     const fileData = fileMetaData.streams[0];
-                                                    const query = {_id: mongoose.Types.ObjectId(awsDataRes.mediaId)};
+                                                    const query = {_id: new mongoose.Types.ObjectId(awsDataRes.mediaId)};
                                                     const updateObject = {
                                                         bitrate: fileData.bit_rate,
                                                         frameRateFps: fileData.nb_frames,
@@ -216,12 +217,12 @@ module.exports = {
                                                             videoCfUrl: updateVideoInfoRes.data.videoDetails.videoInfo.cfUrl,
                                                             videoS3Url: updateVideoInfoRes.data.videoDetails.videoInfo.s3Url
                                                         };
-
+                    
                                                         isRequestValid.res.write("data: " + `${JSON.stringify({
                                                             uploadedMediaInfo: response,
                                                             event: sseConfig.events.media_uploaded
                                                         })}` + '\n\n');
-
+                    
                                                         isRequestValid.res.flush();
                                                         delete videoSSEHashMap[`${userId + "_" + requestId}`];
                                                         isRequestValid.res.end(); // Ending the request.
@@ -256,7 +257,7 @@ module.exports = {
                         // This is to delete the files on the disk.
                         deleteFileFromDisk(originalFilePath, originalFileName);
                         isRequestValid.res.end(); // Ending the request.
-                        console.log("ERROR ::: found in postSingleVideoWithSSEWithWorkerPool, error: " + JSON.stringify(err));
+                        console.log("ERROR ::: found in postSingleVideoWithSSEWithWorkerPool, error: ", err);
                         console.log(`ERROR ::: error: ${err.message}, stack: ${err.stack}`);
                         response = new responseMessage.ErrorInQueryingDB();
                         return callback(null, response, response.code);

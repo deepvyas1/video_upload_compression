@@ -34,9 +34,18 @@ function checkFileType(fileObject, res, callback) {
 
 module.exports = {
 
-    // Middleware to make sure that the image file uploaded is valid.
-    isValidVideoWithoutDiskStorage: function (req, res, next) {
+     // Route middleware to make sure that the image file uploaded is valid.
+    isValidVideo: function (req, res, next) {
         const upload = multer({
+            storage: multer.diskStorage({
+                destination: function (req, file, cb) {
+                    cb(null, `${path.resolve(`${__dirname}`, "../../assets/video")}`)
+                },
+                filename: function (req, file, cb) {
+                    const fileName = Date.now() + '_' + nanoId() + path.extname(file.originalname.toLowerCase())
+                    cb(null, fileName)
+                }
+            }),
             fileFilter: function (req, file, callback) {
                 const fileObject = {
                     file: file,
@@ -52,6 +61,7 @@ module.exports = {
                 const response = responseMessage.fileUploadFailed;
                 return res.status(response.code).send(response);
             } else {
+                console.log("Info ::: isValidVideo middleware completed");
                 next();
             }
         })

@@ -1,11 +1,5 @@
 "use strict";
 
-const promise = require("bluebird");
-const lodash = require('lodash');
-const async = require('async');
-const cryptoJS = require("crypto-js");
-const moment = require("moment");
-const momentTZ = require("moment-timezone");
 const {customAlphabet} = require('nanoid');
 const developmentConfig = require('../environment/development.json');
 
@@ -62,31 +56,15 @@ if (environment === "production") {
     awsS3SecretAccessKey = developmentConfig.awsS3.secretAccessKey;
     awsMediaVideoBucket = developmentConfig.awsS3.bucket.video;
     awsMediaVideoCloudFront = developmentConfig.awsS3.cloudFront.video;
-    fileUploadFieldName = developmentConfig.imageUpload.fileUploadFieldName;
+    fileUploadFieldName = developmentConfig.fileFieldName;
     mainThreadMemoryPercent = developmentConfig.mainThreadMemoryPercent;
     maxWorkerThreadCount = developmentConfig.maxWorkerThreadCount;
     nanoId = customAlphabet(developmentConfig.nanoIdCharacters,
         developmentConfig.nanoIdLength);
 }
 
-
-let jsdom;
-try {
-    // jsdom >= 10.x
-    jsdom = require("jsdom/lib/old-api.js");
-} catch (e) {
-    // jsdom <= 9.x
-    jsdom = require("jsdom");
-}
-
 // global Utils
-global._ = lodash;
-global.moment = moment;
-global.momentTZ = momentTZ;
-global.async = async;
-global.cryptojs = cryptoJS;
 global.ENVIRONMENT = environment;
-global.PROMISE = promise;
 
 global.mongoMainHost = mongoMainHost;
 global.mongoMainDB = mongoMainDB;
@@ -98,8 +76,6 @@ global.awsS3SecretAccessKey = awsS3SecretAccessKey;
 global.cfVideoUrl = awsMediaVideoCloudFront;
 global.awsVideoBucket = awsMediaVideoBucket;
 global.fileUploadFieldName = fileUploadFieldName;
-
-global.deleteSingleVideoUrl = deleteSingleVideoUrl;
 
 global.nanoId = nanoId;
 global.mainThreadMemoryPercent = mainThreadMemoryPercent;

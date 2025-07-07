@@ -23,5 +23,6 @@
   "nanoIdCharacters": "0123456789abcdefghijklmnopqrstuvwxvyz",
   "nanoIdLength": 8,
   "mainThreadMemoryPercent": 20,
-  "maxWorkerThreadCount": 3
+  "maxWorkerThreadCount": 3,
+  "fileFieldName": "files"
 }

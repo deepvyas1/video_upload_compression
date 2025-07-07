@@ -17,23 +17,21 @@ require("./config/globalConstant");
 
 const configDB = require("./config/db");
 
-
-const videoCompressAndImageThumbnailScriptThreadScriptPath = path.resolve(`${__dirname}/server/customThreads/scripts/workerPoolVideoCompressScript.js`);
-const videoImageWorkerPool = workerpool.pool(videoCompressAndImageThumbnailScriptThreadScriptPath, {
+// Here, we are initialising the workerpool ( Singleton )
+const videoCompressThreadScriptPath = path.resolve(`${__dirname}/server/customThreads/scripts/workerPoolVideoCompressScript.js`);
+const videoCompressionWorkerPool = workerpool.pool(videoCompressThreadScriptPath, {
     minWorkers: 1,
     maxWorkers: parseInt(maxWorkerThreadCount)
 });
-console.log("Info ::: Video and image  worker pool initiated: min: ", videoImageWorkerPool.minWorkers, "max: ", videoImageWorkerPool.maxWorkers);
-global.videoImageWorkerPool = videoImageWorkerPool;
-console.log("Info ::: Video and image  worker pool creation stats: ", videoImageWorkerPool.stats()); // For testing
+console.log("Info ::: Video and image  worker pool initiated: min: ", videoCompressionWorkerPool.minWorkers, "max: ", videoCompressionWorkerPool.maxWorkers);
+global.videoCompressionWorkerPool = videoCompressionWorkerPool;
+console.log("Info ::: Video and image  worker pool creation stats: ", videoCompressionWorkerPool.stats()); // For testing
 
 // configuration ===============================================================
 mongoose.Promise = global.Promise;
 
 // let options = {useNewUrlParser: true, useFindAndModify: false};
 const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
 };
 mongoose.mainConnection = mongoose.createConnection(configDB.mongoMainUrl, options);
 
@@ -96,7 +94,7 @@ if (ENVIRONMENT === "production") {
     };
 } else {
     corsOptions = {
-        origin: "*",
+        origin: ["https://fiddle.jshell.net"],
         credentials: true,
         preflightContinue: false,
         optionsSuccessStatus: 204
@@ -104,7 +102,7 @@ if (ENVIRONMENT === "production") {
 }
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options(/(.*)/, cors(corsOptions));
 
 require("./routes")(app);
 

@@ -1,15 +1,18 @@
 "use strict";
 
 // Route Imports.
-const videoSSEV2Route = require("./server/video/videoRoute").videoSSEV2Router;
+const videoSSERoute = require("./server/video/videoRoute").videoSSERouter;
+
+const sseRoute = require("./server/sever_sent_events/sseRoute").sseRouter;
+
 
 // Middleware Imports
-const isValidVideoWithoutDiskStorage = require("./server/utils/middlewares").isValidVideoWithoutDiskStorage;
+const isValidVideo = require("./server/utils/middlewares").isValidVideo;
 
 module.exports = function (app) {
 
-    app.use("/v2/api/user/video/sse", [isValidVideoWithoutDiskStorage], videoSSEV2Route);
+    app.use("/v1/api/user/video/sse", [isValidVideo], videoSSERoute);
 
-    app.use("/v2/api/sse",  sseV2Route);
+    app.use("/v1/api/user/sse",  sseRoute);
 
 };

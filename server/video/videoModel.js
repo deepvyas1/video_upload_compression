@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 // Internal Model Imports.
 const AwsS3Upload = require("../models/awsModel").AwsS3Upload;
+const User = require("../models/userInfoSchema").User;
 
 // Config Imports.
 const videoConfig = require("./videoConfig.json");
